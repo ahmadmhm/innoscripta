@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\Source::class)->constrained();
-            $table->string('resource');
-            $table->string('type')->nullable();
+            $table->string('load_resource')->index();
             $table->string('author')->fulltext()->nullable();
             $table->string('title')->fulltext();
             $table->text('description')->nullable();

@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('source:fetch-news-api')->twiceDaily();
+        $schedule->command('source:fetch-guardian-news')->twiceDaily(2, 14);
     }
 
     /**

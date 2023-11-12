@@ -34,5 +34,8 @@ class ArticleService
         if ($request->filled('dateTo')) {
             $query->where('published_at', '<=', $request->dateTo);
         }
+        if ($request->filled('resource')) {
+            $query->where('load_resource', $request->resource);
+        }
     }
 }

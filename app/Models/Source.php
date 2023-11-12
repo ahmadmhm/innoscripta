@@ -10,7 +10,7 @@ class Source extends Model
 {
     use HasFactory, SoftDeletes;
 
-    public $fillable = [
+    protected $fillable = [
         'name',
         'title',
     ];

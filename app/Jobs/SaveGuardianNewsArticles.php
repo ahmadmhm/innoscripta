@@ -12,7 +12,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class SaveNewsApiArticles implements ShouldQueue
+class SaveGuardianNewsArticles implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -21,7 +21,7 @@ class SaveNewsApiArticles implements ShouldQueue
      */
     public function __construct(protected $articles)
     {
-        $this->onQueue(config('datasource.newsapi.queue'));
+        $this->onQueue(config('datasource.guardian.queue'));
     }
 
     /**
@@ -32,19 +32,21 @@ class SaveNewsApiArticles implements ShouldQueue
         $articlesData = [];
         foreach ($this->articles as $article) {
             $source = Source::firstOrCreate([
-                'name' => $article?->source->id,
-                'title' => $article?->source->name,
+                'name' => $article['sectionId'],
+                'title' => $article['sectionName'],
             ]);
+
             $articlesData[] = [
                 'source_id' => $source->id,
-                'load_resource' => ArticleResource::NEWSAPI,
-                'author' => $article->author,
-                'title' => $article->title,
-                'description' => $article->description,
-                'content' => $article->content,
-                'url' => $article->url,
-                'url_to_image' => $article->urlToImage,
-                'published_at' => Carbon::parse($article->publishedAt),
+                'load_resource' => ArticleResource::GUARDIAN,
+                'type' => $article['type'],
+                'author' => $article['fields']['byline'] ?? '',
+                'published_at' => Carbon::parse($article['webPublicationDate']),
+                'title' => $article['webTitle'],
+                'url' => $article['webUrl'],
+                'description' => $article['fields']['main'] ?? '',
+                'content' => $article['fields']['bodyText'] ?? '',
+                'url_to_image' => $article['fields']['thumbnail'] ?? '',
             ];
 
             Article::insert($articlesData);
