@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('source:fetch-news-api')->twiceDaily();
         $schedule->command('source:fetch-guardian-news')->twiceDaily(2, 14);
+        $schedule->command('source:fetch-new-york-times')->twiceDaily(3, 15);
     }
 
     /**
