@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  inno_postgres:
+    container_name: innoscripta-postgres
+    image: postgres:15.2-alpine
+    environment:
+      POSTGRES_USER: innoscripta_db_user
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: innoscripta_db
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - innoscripta-ag
+    restart: unless-stopped
+
+  inno_pgadmin:
+    container_name: innoscripta-pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      TZ: 'Asia/Tehran'
+      PGTZ: 'Asia/Tehran'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "8081:80"
+    networks:
+      - innoscripta-ag
+    restart: unless-stopped
+
+
+networks:
+  innoscripta-ag:
+
+volumes:
+  postgres:
+  pgadmin:
+

@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+    inno_app:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        image: innoscripta-alpine
+        container_name: innoscripta-panel
+        restart: unless-stopped
+        working_dir: /var/www/html
+        tty: true
+        ports:
+            - "8080:8080"
+            - "443:443"
+        networks:
+            - innoscripta-ag
+
+    inno_redis:
+        image: redis:alpine
+        container_name: innoscripta-redis
+        hostname: redis
+        ports:
+            - '6479:6379'
+        networks:
+            - innoscripta-ag
+        healthcheck:
+            test: [ "CMD", "redis-cli", "ping" ]
+            retries: 3
+            timeout: 5s
+networks:
+    innoscripta-ag:
+
+volumes:
+    meilisearch:
+    app:
+
